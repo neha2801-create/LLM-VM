@@ -168,7 +168,7 @@ class HostedOptimizer(Optimizer):
 
         print("Payload: ", payload, file=sys.stderr)
         try:
-            response = requests.post(url, json=payload, headers=headers)
+            response = requests.post(url, json=payload, headers=headers, timeout=60)
             response.raise_for_status()  # Raise an exception for 4XX and 5XX status codes
             return response.json()['completion']
         except requests.exceptions.RequestException as e:
