@@ -9,6 +9,7 @@ import pickle
 import llm_vm.config as conf
 from llm_vm.guided_completion import GenerativeCompletion
 import re
+import fickling
 
 class DataSynthesis:
     def __init__(self, variance, examples_to_generate, seed_examples=10):
@@ -37,7 +38,7 @@ class DataSynthesis:
         self.call_big = call_big
         if os.path.isfile(conf.settings.data_gen_file):
             new_file = open(conf.settings.data_gen_file,"rb")
-            return list(pickle.load(new_file))
+            return list(fickling.load(new_file))
         datapoints_list = []
         final_prompt = '{"prompt": "' + prompt +'"  , "response": "' +response+'" }'
         final_prompt = "Generate {seed_batch_size} json similar to the one below and separate each json using a new line. \n" + final_prompt

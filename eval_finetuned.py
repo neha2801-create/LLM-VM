@@ -1,7 +1,8 @@
 from llm_vm.client import Client
-import pickle
 from math import sqrt, pow, exp
 import spacy 
+import fickling
+
 nlp=spacy.load("en_core_web_md")
 import re
 import sys
@@ -54,7 +55,7 @@ def metric():
     return regex_check
 
 new_file = open("data_gen.pkl","rb")
-examples = list(pickle.load(new_file))
+examples = list(fickling.load(new_file))
 with suppress_output(suppress_stdout=True, suppress_stderr=True):
     client_test = Client(big_model='pythia')
     # specify the file name of the finetuned model to load
