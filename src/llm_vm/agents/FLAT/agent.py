@@ -1,15 +1,15 @@
 import os
 import sys
 import re
-import random
 from llm_vm.agents.FLAT.agent_helper.business_logic import promptf
 from llm_vm.utils.labels import *
 from llm_vm.agents.FLAT.agent_helper.utils import *
 from llm_vm.agents.FLAT.agent_helper.tools import *
 from llm_vm.utils.keys import *
+import secrets
 
 
-random_fixed_seed = random.Random(4)
+random_fixed_seed = secrets.SystemRandom().Random(4)
 
 class Agent:
     def __init__(self, openai_key, tools = None, bot_instructions = "", verbose = 4):
