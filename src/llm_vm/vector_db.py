@@ -78,7 +78,8 @@ class WeaviateDB(VectorDB):
         "X-OpenAI-Api-Key": os.environ.get("LLM_VM_OPENAI_API_KEY")
     })
 
-    def create_index(self, class_name, class_properties=[], distance="cosine", emb_model="text2vec-openai", mod_config=None):
+    def create_index(self, class_name, class_properties=None, distance="cosine", emb_model="text2vec-openai", mod_config=None):
+        class_properties = [] if class_properties is None else class_properties
         assert type(class_properties) == "list"
         if mod_config is not None:
             assert type(mod_config) == "dict" 
@@ -101,13 +102,15 @@ class WeaviateDB(VectorDB):
     def delete_index(self, class_name):
         self.client.schema.delete_class(class_name)
     
-    def upsert(self, class_name, batch_size=50, num_workers=1, dynamic=True, dataset=[]):
+    def upsert(self, class_name, batch_size=50, num_workers=1, dynamic=True, dataset=None):
+        dataset = [] if dataset is None else dataset
         self.client.batch.configure(batch_size=batch_size, num_workers=num_workers, dynamic=dynamic)
         with self.client.batch as batch: 
             for d in dataset:
                 batch.add_data_object(d, class_name)
 
-    def query(self, prompt, class_name, top_k=3, properties=[]):
+    def query(self, prompt, class_name, top_k=3, properties=None):
+        properties = [] if properties is None else properties
         return self.client.query.get(class_name, properties).with_near_text({"concepts": [prompt]}).with_limit(top_k).do()
 
     def read_object(self, class_name, obj_id):

@@ -90,7 +90,9 @@ class FinetuningDataset(torch.utils.data.Dataset):
         return self.dataset[idx]
 
 class BaseOnsiteLLM(ABC):
-    def __init__(self,model_uri=None, tokenizer_kw_args={}, model_kw_args={}, dtype=None):
+    def __init__(self,model_uri=None, tokenizer_kw_args=None, model_kw_args=None, dtype=None):
+        tokenizer_kw_args = {} if tokenizer_kw_args is None else tokenizer_kw_args
+        model_kw_args = {} if model_kw_args is None else model_kw_args
         if model_uri != None :
             self.model_uri= model_uri
         if model_uri is None and self.model_uri is None:
@@ -138,7 +140,7 @@ class BaseOnsiteLLM(ABC):
         self.model.load_state_dict(torch.load(os.path.join(model_path_default,"finetuned_models", self.model_name, model_filename)))
 
 
-    def generate(self,prompt,max_length=100, tokenizer_kwargs={}, generation_kwargs={}): # both tokenizer and model take kwargs :(
+    def generate(self,prompt,max_length=100, tokenizer_kwargs=None, generation_kwargs=None): # both tokenizer and model take kwargs :(
         """
         This function uses the class's llm and tokenizer to generate a response given a user's prompt
 
@@ -154,6 +156,8 @@ class BaseOnsiteLLM(ABC):
            >>> SmallLocalOpt.generate("How long does it take for an apple to grow?")
            I think it takes about a week for the apple to grow.
         """
+        tokenizer_kwargs = {} if tokenizer_kwargs is None else tokenizer_kwargs
+        generation_kwargs = {} if generation_kwargs is None else generation_kwargs
 
 
         if isinstance(device, list):

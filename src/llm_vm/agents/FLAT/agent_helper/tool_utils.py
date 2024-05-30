@@ -14,6 +14,7 @@ from llm_vm.agents.FLAT.agent_helper.utils import make_interaction
 from datetime import datetime
 from llm_vm.agents.FLAT.agent_helper.tools import GENERIC_TOOLS
 from random import sample, shuffle
+from typing import Optional
 
 
 def __create_tool_tag(tool: SingleTool) -> str:
@@ -40,7 +41,9 @@ def make_tool_desc(tool: SingleTool):
 </{L_TOOL}>
 '''
 
-def generate_convo_history(memory: TupleList = [], facts: TupleList = []) -> str:
+def generate_convo_history(memory: Optional[TupleList] = None, facts: Optional[TupleList] = None) -> str:
+    memory = [] if memory is None else memory
+    facts = [] if facts is None else facts
     if len(memory) + len(facts) == 0:
         return ""
 

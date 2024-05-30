@@ -22,7 +22,9 @@ else:
     default_small_model = conf.settings.small_model
 
 # Builds the client to facilitate easy use.
-def client_build(type = "inference", openai_key = None, big_model = default_big_model, small_model =default_small_model,big_model_config={},small_model_config={}):
+def client_build(type = "inference", openai_key = None, big_model = default_big_model, small_model =default_small_model,big_model_config=None,small_model_config=None):
+    big_model_config = {} if big_model_config is None else big_model_config
+    small_model_config = {} if small_model_config is None else small_model_config
     if type == "inference":
         return Simple_Inference_Client(big_model, big_model_config, openai_key)
     else:
@@ -30,7 +32,8 @@ def client_build(type = "inference", openai_key = None, big_model = default_big_
     
 # Shoe-in for simple inference. Allows for traditional initialization of the client or dynamic initialization for rapid inference without agents.
 class Simple_Inference_Client:
-    def __init__(self, model = default_big_model, model_config = {}, openai_key = None):
+    def __init__(self, model = default_big_model, model_config = None, openai_key = None):
+        model_config = {} if model_config is None else model_config
         self.model = load_model_closure(model)(**model_config)
         openai.api_key = openai_key
 
@@ -51,7 +54,7 @@ class Client:
         complete: The Anarchy completion endpoint giving access to a specified LLM
     """
 
-    def __init__(self, big_model = default_big_model, small_model =default_small_model,big_model_config={},small_model_config={}):
+    def __init__(self, big_model = default_big_model, small_model =default_small_model,big_model_config=None,small_model_config=None):
         """
         This __init__ function allows the user to specify which LLM they want to use upon instantiation.
 
@@ -65,6 +68,8 @@ class Client:
         Example:
             >>> client = Client(big_model = 'neo')
         """
+        big_model_config = {} if big_model_config is None else big_model_config
+        small_model_config = {} if small_model_config is None else small_model_config
         self.big_model = big_model
         self.small_model = small_model 
         self.teacher = load_model_closure(big_model)(**big_model_config)
@@ -109,8 +114,8 @@ class Client:
                  temperature=0,
                  stoptoken = None,
                  tools = None,
-                 openai_kwargs = {},
-                 hf_kwargs = {}):
+                 openai_kwargs = None,
+                 hf_kwargs = None):
         """
         This function is Anarchy's completion entry point
 
@@ -133,6 +138,8 @@ class Client:
            >>> SmallLocalOpt.generate("How long does it take for an apple to grow?)
            How long does it take for an apple tree to grow?
         """
+        openai_kwargs = {} if openai_kwargs is None else openai_kwargs
+        hf_kwargs = {} if hf_kwargs is None else hf_kwargs
         static_context = context
         dynamic_prompt = prompt
         use_rebel_agent = False
@@ -254,9 +261,9 @@ class Client:
                  temperature=0,
                  stoptoken = None,
                  tools = None,
-                 query_kwargs = {},
-                 hf_kwargs = {},
-                 openai_kwargs = {}):
+                 query_kwargs = None,
+                 hf_kwargs = None,
+                 openai_kwargs = None):
         
         """
         This function is Anarchy's completion entry point
@@ -276,6 +283,9 @@ class Client:
         Returns:
             str: RAG Response
         """
+        query_kwargs = {} if query_kwargs is None else query_kwargs
+        hf_kwargs = {} if hf_kwargs is None else hf_kwargs
+        openai_kwargs = {} if openai_kwargs is None else openai_kwargs
         
         prompt_embeddings = self.emb_model.encode(prompt)
         query_kwargs["vector"] = prompt_embeddings

@@ -10,6 +10,7 @@ from llm_vm.agents.FLAT.agent_helper.utils import *
 from llm_vm.agents.FLAT.models.get_decision_model import get_newest_decision_model
 from llm_vm.agents.FLAT.models.utils.tool_picker_model.tool_picker_model_data import tool_input_data
 from llm_vm.agents.FLAT.models.utils.question_split_model.question_split_model_data import question_splitter_data
+from typing import Optional
 
 # openai.api_key = OPENAI_DEFAULT_KEY
 
@@ -108,7 +109,9 @@ def pick_tool(tools_list, question, conversation_history, use_fine_tuned_model =
         return DefaultTools.I_DONT_KNOW.value, price
 
 
-def check_can_answer_from_memory(question: str, memory: TupleList = [], facts: TupleList = []) -> Tuple[bool, float]:
+def check_can_answer_from_memory(question: str, memory: Optional[TupleList] = None, facts: Optional[TupleList] = None) -> Tuple[bool, float]:
+    memory = [] if memory is None else memory
+    facts = [] if facts is None else facts
 
     memory_prompt, memory_stop = create_memory_prompt(
         # answer_from_memory_data["data"] +
