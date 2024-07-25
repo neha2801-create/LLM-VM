@@ -13,7 +13,7 @@ from llm_vm.utils.typings_llm import *
 from llm_vm.agents.FLAT.agent_helper.utils import make_interaction
 from datetime import datetime
 from llm_vm.agents.FLAT.agent_helper.tools import GENERIC_TOOLS
-from random import sample, shuffle
+import secrets
 
 
 def __create_tool_tag(tool: SingleTool) -> str:
@@ -67,15 +67,15 @@ def get_training_tool_subset (
     if tool_id_always_returned == None \
        or tool_id_always_returned == DefaultTools.I_DONT_KNOW.value \
        or tool_id_always_returned == DefaultTools.ANSWER_FROM_MEMORY.value:
-        return sample(list_of_tools, max_num_elements - 1)
+        return secrets.SystemRandom().sample(list_of_tools, max_num_elements - 1)
 
     specific_tool = next(tool for tool in list_of_tools if tool["id"] == tool_id_always_returned)
-    subset_of_tools = sample(list_of_tools, max_num_elements - 1)
+    subset_of_tools = secrets.SystemRandom().sample(list_of_tools, max_num_elements - 1)
     # make sure it doesn't have our specific_tool inside
     subset_of_tools = [tool for tool in subset_of_tools if tool["id"] != tool_id_always_returned] + [specific_tool]
 
     # VERY IMPORTANT - otherwise the model thinks that the last answer is always the correct one.
-    shuffle(subset_of_tools)
+    secrets.SystemRandom().shuffle(subset_of_tools)
 
     return subset_of_tools
 
@@ -113,7 +113,7 @@ def splitter_prompt(elements: List[QuestionSplitModelData]) -> Tuple[str, str]:
 def toolpicker_prompt(elements: List[ToolpickerInputModelData], tools: ToolList) -> str:
 
     shuffled_tools = tools.copy()
-    shuffle(shuffled_tools)
+    secrets.SystemRandom().shuffle(shuffled_tools)
     tools_html = "\n".join([__create_tool_tag(_tool) for _tool in shuffled_tools])
     last_stop = None
 

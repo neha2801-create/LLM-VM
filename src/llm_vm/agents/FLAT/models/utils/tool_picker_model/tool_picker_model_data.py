@@ -4,7 +4,7 @@ import os
 from llm_vm.agents.FLAT.agent_helper.tool_utils import get_training_tool_subset
 from llm_vm.agents.FLAT.agent_helper.tools import GENERIC_TOOLS
 from llm_vm.agents.FLAT.models.utils.tool_picker_model.get_training_tools import get_randomised_training_tools
-from random import randrange
+import secrets
 
 def __use_tool(tool_id: int, shuffle_value: int = 0, shuffle_modulo: int = 1e9) -> int:
     return int((tool_id + shuffle_value) % shuffle_modulo)
@@ -27,7 +27,7 @@ def __get_toolpicker_model(tools_input_model: ToolpickerInputModel) -> Toolpicke
     tools_input_model["data"] = json_data
     complete_tools: List[ToolpickerInputModelData] = []
     for t in tools_input_model["data"]:
-        rand_value = randrange(0, len(tools_input_model["data"]))
+        rand_value = secrets.SystemRandom().randrange(0, len(tools_input_model["data"]))
         answer_key = t["answer"]
         answer_value = ALL_TOOLS_MAP[answer_key].value if answer_key in ALL_TOOLS_MAP else None
         if (answer_value == None):

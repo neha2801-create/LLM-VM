@@ -3,6 +3,7 @@ import os
 import sys
 import re
 import openai
+import secrets
 
 # Get the current file's directory to grab the python files with common functionality in the utils/ folder
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -11,13 +12,12 @@ utils_dir = os.path.join(grandparent_dir, 'utils/')
 sys.path.append(utils_dir)
 
 from llm_vm.utils.labels import *
-import random
 from Levenshtein import distance as lev
 from llm_vm.utils.typings_llm import *
 from bs4 import BeautifulSoup
 
 
-random_fixed_seed = random.Random(4)
+random_fixed_seed = secrets.SystemRandom().Random(4)
 
 def print_op(*kargs, **kwargs):
     print(*kargs, **kwargs, flush=True, file=sys.stderr)
