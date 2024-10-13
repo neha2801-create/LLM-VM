@@ -15,6 +15,7 @@ from llm_vm.guided_completion import Completion
 # we need to package-ify so this works
 from llm_vm.completion.data_synthesis import DataSynthesis
 import inspect
+import fickling
 
 
 job_id = None # we want to be able to cancel a fine_tune if you kill the program
@@ -65,7 +66,7 @@ class LocalEphemeral:
 
     def load_data(self,file):
         #using pickle files right now, in the future we will have to use databases
-        self.training_store = pickle.load(file)
+        self.training_store = fickling.load(file)
 
     def store_data(self,file):
          #using pickle files right now, in the future we will have to use databases
