@@ -26,10 +26,10 @@ from llm_vm.utils.tools import *
 from urllib.parse import urlencode
 import urllib.parse as urlparse
 import json
-import random
 
 # UNCOMMENT THESE IMPORTS SO THAT SUBQUESTION PORTION CAN WORK (NLP CURRENTLY NOT RECOGNIZED)
 import spacy
+import secrets
 
 nlp = None #spacy.load("en_core_web_md")
 
@@ -65,7 +65,7 @@ def print_op(*kargs, **kwargs):
     print(*kargs, **kwargs, flush=True, file=sys.stderr)
 
 
-random_fixed_seed = random.Random(4)
+random_fixed_seed = secrets.SystemRandom().Random(4)
 
 QUALITY = 0.2
 

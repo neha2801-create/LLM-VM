@@ -1,5 +1,4 @@
 import re
-import random
 from llm_vm.utils.typings_llm import *
 from llm_vm.agents.FLAT.agent_helper.requests.call_llm import call_llm
 
@@ -10,6 +9,7 @@ from llm_vm.agents.FLAT.agent_helper.utils import *
 from llm_vm.agents.FLAT.models.get_decision_model import get_newest_decision_model
 from llm_vm.agents.FLAT.models.utils.tool_picker_model.tool_picker_model_data import tool_input_data
 from llm_vm.agents.FLAT.models.utils.question_split_model.question_split_model_data import question_splitter_data
+import secrets
 
 # openai.api_key = OPENAI_DEFAULT_KEY
 
@@ -17,7 +17,7 @@ from llm_vm.agents.FLAT.models.utils.question_split_model.question_split_model_d
 def question_split(question_to_split, use_fine_tuned_model = True):
 
     question_data = question_splitter_data["data"].copy()
-    random.shuffle(question_data)
+    secrets.SystemRandom().shuffle(question_data)
     NUMBER_OF_EXAMPLES = 6
     question_data = question_data[:NUMBER_OF_EXAMPLES]
     use_fine_tuned_model = False
@@ -50,7 +50,7 @@ def question_split(question_to_split, use_fine_tuned_model = True):
 
 def pick_tool(tools_list, question, conversation_history, use_fine_tuned_model = True, debug_prompt = False):
     tool_data = tool_input_data["data"].copy()
-    random.shuffle(tool_data)
+    secrets.SystemRandom().shuffle(tool_data)
     NUMBER_OF_EXAMPLES = 6
     tool_data = tool_data[:NUMBER_OF_EXAMPLES]
     use_fine_tuned_model = False
